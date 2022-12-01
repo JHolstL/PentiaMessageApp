@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "571922961897",
+    "project_id": "pentiamessageapp",
+    "storage_bucket": "pentiamessageapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571922961897:android:09ff6c04267fa84b11e778",
+        "android_client_info": {
+          "package_name": "com.pentiamessageapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "571922961897-5a5g3v3e8v6aplbs1318k5n9bbbid7dm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pentiamessageapp",
+            "certificate_hash": "de0bf1e3a177af3a6eaffdf2a4af3cca190a410a"
+          }
+        },
+        {
+          "client_id": "571922961897-l5h86sp82c6p818fjn3e7jkvahq63mgq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pentiamessageapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "571922961897-55rqbgnffb8ij1qh455bch87ejibrdbs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAE-MvnVrh6Z_TBP8hom--YOmlHFIRWsKE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "571922961897-55rqbgnffb8ij1qh455bch87ejibrdbs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
