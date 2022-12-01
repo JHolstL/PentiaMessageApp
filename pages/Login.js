@@ -5,7 +5,7 @@ import auth from '@react-native-firebase/auth'
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
 
-export default function login() {
+export default function Login({navigation}) {
 
     const [loggedIn, setloggedIn] = useState(false);
     const [userInfo, setuserInfo] = useState('');
@@ -81,7 +81,6 @@ export default function login() {
 
   return (
     <View style={{flex:1, justifyContent:'flex-start', alignItems:'center'}}>
-        <Text>Hello world</Text>
         <Text style={{fontSize: 22, fontWeight: 'bold', paddingBottom: 10}}>Welcome to my Message App!</Text>
         <Text style={{paddingBottom: 10}}>Choose how you want to login</Text>
         <Button 
@@ -99,6 +98,12 @@ export default function login() {
         title='Sign in with Facebook'
         onPress={signInWithFacebook}
         />
+                <Button
+        title='Navigation'
+        onPress={() => navigation.navigate('ChatRooms')}
+        />
+
+        {loggedIn && navigation.navigate('ChatRooms')}
     </View>
   )
 }
