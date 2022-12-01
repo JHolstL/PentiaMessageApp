@@ -1,9 +1,9 @@
 // import React from 'react'
 import { View, Text, Button } from 'react-native'
 import {useEffect, useState} from "react";
-
 import auth from '@react-native-firebase/auth'
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { LoginManager, AccessToken } from 'react-native-fbsdk';
 
 export default function login() {
 
@@ -47,6 +47,38 @@ export default function login() {
       }
   };
 
+  const signInWithFacebook = async () => {
+    // Attempt login with permissions
+  const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+
+  if (result.isCancelled) {
+    throw 'User cancelled the login process';
+  }
+
+  // Once signed in, get the users AccesToken
+  const data = await AccessToken.getCurrentAccessToken();
+
+  if (!data) {
+    throw 'Something went wrong obtaining access token';
+  }
+
+  // Create a Firebase credential with the AccessToken
+  const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+  // Sign-in the user with the credential
+  const user_sign_in = auth().signInWithCredential(facebookCredential)
+  
+  setloggedIn(true);
+
+  user_sign_in.then((user)=>{
+    setuserInfo(user)
+    console.log(userInfo);
+  })
+  .catch((error)=>{
+    console.log(error);
+  })
+  }
+
   return (
     <View style={{flex:1, justifyContent:'flex-start', alignItems:'center'}}>
         <Text>Hello world</Text>
@@ -62,6 +94,11 @@ export default function login() {
         onPress={signOut}
         />
         {!loggedIn && <Text>You are currently logged out</Text>}
+
+        <Button
+        title='Sign in with Facebook'
+        onPress={signInWithFacebook}
+        />
     </View>
   )
 }

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">pentiaMessageApp</string>
+    <string name="facebook_app_id">875276800499672</string>
+    <string name="facebook_client_token">60725734981c5511f99fc17888a8bca0</string>
 </resources>
