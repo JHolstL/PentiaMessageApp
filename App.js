@@ -36,9 +36,9 @@ import Navigation from './pages/Navigation';
 const App: () => Node = () => {
   
   return (
-    <NavigationContainer>
-      <Navigation/>
-    </NavigationContainer>
+    
+    <Navigation/>
+    
 
   );
 };

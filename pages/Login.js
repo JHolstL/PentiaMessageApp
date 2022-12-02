@@ -28,13 +28,16 @@ export default function Login({navigation}) {
 
   setloggedIn(true);
 
-  user_sign_in.then((user)=>{
+  await user_sign_in.then((user)=>{
     setuserInfo(user)
     console.log(userInfo);
   })
   .catch((error)=>{
     console.log(error);
   })
+
+  navigation.navigate('ChatRooms', {user: userInfo})
+
   }
 
     const signOut = async () => {
@@ -99,7 +102,7 @@ export default function Login({navigation}) {
         onPress={signInWithFacebook}
         />
 
-        {loggedIn && navigation.navigate('ChatRooms')}
+        {/* {loggedIn && navigation.navigate('ChatRooms', {user: userInfo})} */}
     </View>
   )
 }

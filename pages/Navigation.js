@@ -4,29 +4,18 @@ import { NavigationContainer, StackActionHelpers } from '@react-navigation/nativ
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from "./Login";
 import ChatRooms from './ChatRooms';
+import TextRoom from './TextRoom';
 
 const Stack = createNativeStackNavigator();
 
 export default function Navigation({navigation}) {
   return (
+    <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name='Login' component={Login}/>
         <Stack.Screen name='ChatRooms' component={ChatRooms}/>
-      </Stack.Navigator>    
+        <Stack.Screen name='TextRoom' component={TextRoom}/>
+      </Stack.Navigator>
+    </NavigationContainer> 
   )
-}
-
-function HomeScreen({Navigation}){
-  <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-    {/* <TouchableOpacity
-    
-      onPress={() => Navigation.navigate('Login')}
-    >
-      <Text> Press me </Text>
-    </TouchableOpacity> */}
-    <Text>Hello</Text>
-    <Button title='Press me'/>
-  </View>
-
-
 }
