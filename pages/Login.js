@@ -1,9 +1,10 @@
 // import React from 'react'
-import { View, Text, Button } from 'react-native'
-import {useEffect, useState} from "react";
+import { View, Text, Button, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import React, {useEffect, useState} from "react";
 import auth from '@react-native-firebase/auth'
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 export default function Login({navigation}) {
 
@@ -26,19 +27,27 @@ export default function Login({navigation}) {
   // Sign-in the user with the credential
   const user_sign_in = auth().signInWithCredential(googleCredential);
 
-  setloggedIn(true);
+  if (user_sign_in != '') {
+    user_sign_in.then((user)=>{
+      setloggedIn(true);
+      setuserInfo(user)
+      console.log(userInfo);
+      console.log(loggedIn);
+    })
+    .catch((error)=>{
+      console.log(error);
+    })
+  }
 
-  await user_sign_in.then((user)=>{
-    setuserInfo(user)
-    console.log(userInfo);
-  })
-  .catch((error)=>{
-    console.log(error);
-  })
-
-  navigation.navigate('ChatRooms', {user: userInfo})
 
   }
+
+  useEffect(() => {
+    if (loggedIn) {
+      navigation.navigate('ChatRooms', {user: userInfo}) // This is be executed when the state changes
+    }
+
+  }, [userInfo]);
 
     const signOut = async () => {
       try {
@@ -75,34 +84,82 @@ export default function Login({navigation}) {
 
   user_sign_in.then((user)=>{
     setuserInfo(user)
-    console.log(userInfo);
   })
   .catch((error)=>{
     console.log(error);
   })
+
+  console.log(userInfo);
+
   }
+
 
   return (
     <View style={{flex:1, justifyContent:'flex-start', alignItems:'center'}}>
         <Text style={{fontSize: 22, fontWeight: 'bold', paddingBottom: 10}}>Welcome to my Message App!</Text>
-        <Text style={{paddingBottom: 10}}>Choose how you want to login</Text>
-        <Button 
-        title='Sign in with Google'
-        onPress={signInWithGoogleAsync}
-        />
+        <Text style={{paddingBottom: 10, fontWeight: 'bold'}}>Choose how you want to login</Text>
+
+        <TouchableOpacity
+          style={styles.googleButton}
+          onPress={signInWithGoogleAsync}
+        >
+          <Image source={require('../images/googleIcon.png')} resizeMode='contain'/>
+          <Text style={styles.googleText}>Sign in with Google</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.fbButton}
+          onPress={signInWithFacebook}
+        >
+          <Image source={require('../images/facebookIcon.png')} resizeMode='contain'/>
+          <Text style={styles.fbText}>Sign in with Facebook</Text>
+        </TouchableOpacity>
 
         <Button 
         title='Sign out with Google'
         onPress={signOut}
         />
+
+
+
         {!loggedIn && <Text>You are currently logged out</Text>}
 
-        <Button
-        title='Sign in with Facebook'
-        onPress={signInWithFacebook}
-        />
-
-        {/* {loggedIn && navigation.navigate('ChatRooms', {user: userInfo})} */}
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  fbButton: {
+    width: 200,
+    height: 50,
+    backgroundColor: '#4267B2',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  googleButton: {
+    width: 200,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.white,
+    borderRadius: 10,
+    marginBottom: 10,
+    flexDirection: 'row',
+    borderColor: '#D2D2D2',
+    elevation: 20,
+  },
+  fbText: {
+    color: Colors.white, 
+    fontWeight: 'bold',
+    paddingLeft: 15,
+  },
+  googleText: {
+    color: Colors.gray,
+    fontWeight: 'bold',
+    paddingLeft: 15,
+  }
+
+})

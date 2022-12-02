@@ -1,6 +1,7 @@
 import React, {useRef, useEffect} from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Button } from 'react-native'
 import { render } from "react-dom";
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 
 
@@ -8,7 +9,7 @@ import { render } from "react-dom";
 export default function ChatRooms({route, navigation}) {
   
   const {user} = route.params;
-  console.log(user + 'hej');
+  console.log(user.user.displayName + 'hej');
 
   const RoomTitles = [
     {id: 'stocks', title: 'Stocks'},
@@ -17,20 +18,22 @@ export default function ChatRooms({route, navigation}) {
     {id: 'news', title: 'News'}
   ]
 
-  // const listItems = RoomTitles.map((room) => (
-  //   <Text style={styles.chatRoom} onPress={navigation.navigate('TextRoom')}>{room.title}</Text>
-  // ))
-
   return (
     <View>
       <View style={{justifyContent:'flex-start', alignItems:'center'}}>
-        <Text style={{fontSize: 22, fontWeight: 'bold', paddingBottom: 10}}>Welcome </Text>
+        <Text style={{fontSize: 22, fontWeight: 'bold', paddingBottom: 10}}>Welcome {user.user.displayName}</Text>
+        <Text style={{fontSize: 15, fontWeight: 'bold', paddingBottom: 10}}>Choose a Chat Room:</Text>
       </View>
-      <Text style={{fontSize: 15, fontWeight: 'bold', paddingBottom: 10}}>Choose a Chat Room:</Text>
 
       <View style={{alignItems: 'center'}}>
       {RoomTitles.map((room, index) => (   
-        <Text style={styles.chatRoom} key={index} onPress={()=>{navigation.navigate('TextRoom', {title: room.title})}}>{room.title}</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={()=>{navigation.navigate('TextRoom', {title: room.title})}}
+          >
+            <Text style={styles.roomText} key={index}>{room.title}</Text>
+          </TouchableOpacity>
+          
       ))}
       </View>
 
@@ -49,12 +52,17 @@ export default function ChatRooms({route, navigation}) {
 }
 
 const styles = StyleSheet.create({
-  chatRoom: {
+  button: {
     backgroundColor: '#5d5959',
-    // paddingTop: 10,
+    // paddingBottom: 10,
     height: 50,
+    marginBottom: 10,
+    width: 200,
     alignItems: 'center',
-    justifyContent: 'center'
-    
+    justifyContent: 'center',
+    borderRadius: 10,    
+  },
+  roomText: {
+    color: Colors.white
   },
 })
