@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {Component, useEffect} from 'react';
 import type {Node} from 'react';
 import {
   SafeAreaView,
@@ -28,19 +28,32 @@ import {
 
 import { NavigationContainer, StackActionHelpers } from '@react-navigation/native';
 import Navigation from './pages/Navigation';
+import SplashScreen from 'react-native-splash-screen';
 
 
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
 
-const App: () => Node = () => {
-  
-  return (
-    
-    <Navigation/>
-    
+class App extends Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+    };
+  }
 
-  );
+  // useEffect(() => {
+  //   SplashScreen.hide();
+  // }, []);
+
+  componentDidMount = () => {
+    SplashScreen.hide()
+  }
+
+  render(){
+    return(
+      <Navigation/>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
