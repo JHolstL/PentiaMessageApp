@@ -29,7 +29,7 @@ export default function ChatRooms({route, navigation}) {
       {RoomTitles.map((room, index) => (   
           <TouchableOpacity
             style={styles.button}
-            onPress={()=>{navigation.navigate('TextRoom', {title: room.title})}}
+            onPress={()=>{navigation.navigate('TextRoom', {room: room, user: user})}}
           >
             <Text style={styles.roomText} key={index}>{room.title}</Text>
           </TouchableOpacity>
