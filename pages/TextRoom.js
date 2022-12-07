@@ -1,14 +1,10 @@
 import { View, Text, StyleSheet, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native';
 import React, {useRef, useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
-import {addDoc, collection, serverTimestamp} from "@firebase/firestore";
-import { Form, FormItem } from 'react-native-form-component';
-import { FlatList } from 'react-native';
 
 //async function to send data to firestore
 async function sendMessage(roomId, user, text){
   try{
-    // await addDoc(collection(firestore, 'chatRooms', roomId, 'messages'), text);
     //Get the collection
     const ref = firestore().collection('chatRooms').doc(roomId).collection('messages');
 
@@ -26,26 +22,6 @@ async function sendMessage(roomId, user, text){
     console.log(error);
     console.log('Her')
   }
-}
-
-function onResult(QuerySnapshot) {
-  console.log('Got Users collection result.');
-}
-
-function onError(error) {
-  console.error(error);
-}
-
-async function getMessages(roomId, callback){
-  try{
-    console.log('Here')
-    const ref = firestore().collection('chatRooms').doc(roomId).collection('messages');
-    const messages = ref.orderBy('timestamp', 'asc').get();
-    callback(messages)
-  } catch (error){
-    console.log(error);
-  }
-
 }
 
 export default function TextRoom({route, navigation}) {
@@ -114,7 +90,6 @@ export default function TextRoom({route, navigation}) {
           ))
         }
         
-
       </ScrollView>
         <View style={styles.inputContainer} nested>
           <TextInput style={styles.form} placeholder='Enter Message' value={message} onChangeText={(message) => setMessage(message)} ref={messageRef}/>

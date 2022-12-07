@@ -57,7 +57,6 @@ export default function ChatRooms({route, navigation}) {
         </TouchableOpacity>          
       ))}
       </View>      
-      
     </View>
     
   )

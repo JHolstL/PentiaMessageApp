@@ -126,8 +126,6 @@ export default function Login({navigation}) {
         onPress={signOut}
         />
 
-
-
         {!loggedIn && <Text>You are currently logged out</Text>}
 
     </View>
