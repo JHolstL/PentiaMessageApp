@@ -1,17 +1,19 @@
-import React, {useRef, useEffect, useState} from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native'
+import React, {useRef, useEffect, useState, useCallback} from 'react';
+import { Text, View, StyleSheet, TouchableOpacity, Image, RefreshControl, ScrollView} from 'react-native'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import firestore from '@react-native-firebase/firestore';
+import { withSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ChatRooms({route, navigation}) {
   
   const {user} = route.params;
-  const [chatRooms, setChatRooms] = useState([])
+  const [chatRooms, setChatRooms] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   //UseEffect is called when component mounts, and fetches Chat room data from Firestore
   useEffect(() => {
     FetchChatRooms();
-  }, [])
+  }, []);
 
   //Function is run of onSnapshot receives a result and sets the data from
   //the query to the chatRooms array
@@ -38,8 +40,26 @@ export default function ChatRooms({route, navigation}) {
     ref.onSnapshot(onResult, onError)
   }
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    // window.location.reload();
+    // FetchChatRooms();
+    navigation.push('ChatRooms', {user: user})
+    setTimeout(function() {
+      setRefreshing(false)
+    }, 2000)
+  }, []);
+
   return (
-    <View>
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
+    >
+      
       <View style={{justifyContent:'flex-start', alignItems:'center'}}>
         <Text style={{fontSize: 22, fontWeight: 'bold', paddingBottom: 10}}>Welcome {user.user.displayName}</Text>
         <Text style={{fontSize: 15, fontWeight: 'bold', paddingBottom: 10}}>Choose a Chat Room:</Text>
@@ -57,7 +77,7 @@ export default function ChatRooms({route, navigation}) {
         </TouchableOpacity>          
       ))}
       </View>      
-    </View>
+    </ScrollView>
     
   )
 }
