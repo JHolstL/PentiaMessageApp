@@ -50,13 +50,9 @@ export default function TextRoom({route, navigation}) {
   const messageRef = useRef();
   const scrollviewRef = useRef();
 
-  // window.addEventListener('load', () => {
-  //   Fetchdata();
-  // });
-
   useEffect(() => {
     Fetchdata();
-  }, [room.id])
+  }, [])
 
   function onResult(QuerySnapshot) {
     QuerySnapshot.docChanges().forEach(element => {
@@ -94,11 +90,12 @@ export default function TextRoom({route, navigation}) {
       showsVerticalScrollIndicator={false}
       >
         {
-          messages.map((data) => (
+          messages.map((data, index) => (
             <Message
             text={data.text}
             name={data.displayName}
             timestamp={convertTimestamp(data.timestamp)}
+            key={index}
             />
           ))
         }
@@ -177,7 +174,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     backgroundColor: '#616161',
     marginLeft: 5,
-    height: 35,
+    // height: 35,
     justifyContent: 'center',
     textAlign: 'left',
     borderRadius: 10,
@@ -189,6 +186,8 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     fontSize: 16,
+    paddingBottom: 5,
+    paddingTop: 5,
   },
   nameText: {
     paddingLeft: 7,
