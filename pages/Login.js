@@ -11,22 +11,26 @@ export default function Login({navigation}) {
     const [loggedIn, setloggedIn] = useState(false);
     const [userInfo, setuserInfo] = useState('');
 
+  //Configure web client id before signing in with Google
   GoogleSignin.configure({
     webClientId: '571922961897-55rqbgnffb8ij1qh455bch87ejibrdbs.apps.googleusercontent.com',
   });
 
+  //Function to sign in with Google
   const signInWithGoogleAsync = async () => {
     // Check if your device supports Google Play
   await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+
   // Get the users ID token
   const { idToken } = await GoogleSignin.signIn();
 
-  // Create a Google credential with the token
+  // Create a Google Firebase credential with the token
   const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
   // Sign-in the user with the credential
   const user_sign_in = auth().signInWithCredential(googleCredential);
 
+  //If signin is successfull, set the user info and set loggedIn to true
   if (user_sign_in != '') {
     user_sign_in.then((user)=>{
       setloggedIn(true);
@@ -38,58 +42,60 @@ export default function Login({navigation}) {
       console.log(error);
     })
   }
-
-
   }
 
+  //UseEffect is run when the setState for userinfo is done
   useEffect(() => {
+    //Check if user is logged in, and redirect to next screen using React navigation
     if (loggedIn) {
       navigation.navigate('ChatRooms', {user: userInfo}) // This is be executed when the state changes
     }
-
   }, [userInfo]);
 
-    const signOut = async () => {
-      try {
-          await GoogleSignin.revokeAccess();
-          await GoogleSignin.signOut();
-          setloggedIn(false)
-      } catch (error) {
-          console.error(error);
-      }
+
+
+  const signOut = async () => {
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      setloggedIn(false)
+    } catch (error) {
+      console.error(error);      }
   };
 
+  //Function to sign in with Facebook
   const signInWithFacebook = async () => {
     // Attempt login with permissions
-  const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+    const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
 
-  if (result.isCancelled) {
-    throw 'User cancelled the login process';
-  }
+    if (result.isCancelled) {
+      throw 'User cancelled the login process';
+    }
 
   // Once signed in, get the users AccesToken
-  const data = await AccessToken.getCurrentAccessToken();
+    const data = await AccessToken.getCurrentAccessToken();
 
-  if (!data) {
-    throw 'Something went wrong obtaining access token';
-  }
+    if (!data) {
+      throw 'Something went wrong obtaining access token';
+    }
 
-  // Create a Firebase credential with the AccessToken
-  const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+    // Create a Firebase credential with the AccessToken
+    const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
 
-  // Sign-in the user with the credential
-  const user_sign_in = auth().signInWithCredential(facebookCredential)
-  
-  setloggedIn(true);
+    // Sign-in the user with the credential
+    const user_sign_in = auth().signInWithCredential(facebookCredential)
 
-  user_sign_in.then((user)=>{
-    setuserInfo(user)
-  })
-  .catch((error)=>{
-    console.log(error);
-  })
+    //Set userinfo and login state
+    setloggedIn(true);
 
-  console.log(userInfo);
+    user_sign_in.then((user)=>{
+      setuserInfo(user)
+    })
+    .catch((error)=>{
+      console.log(error);
+    })
+
+    console.log(userInfo);
 
   }
 

@@ -5,11 +5,17 @@ import {addDoc, collection, serverTimestamp} from "@firebase/firestore";
 import { Form, FormItem } from 'react-native-form-component';
 import { FlatList } from 'react-native';
 
+//async function to send data to firestore
 async function sendMessage(roomId, user, text){
   try{
     // await addDoc(collection(firestore, 'chatRooms', roomId, 'messages'), text);
+    //Get the collection
     const ref = firestore().collection('chatRooms').doc(roomId).collection('messages');
+
+    //Create a timestamp from the current time
     const timestamp = Date.now();
+
+    //Add the message to the collection
     await ref.add({
       uid: user.uid,
       displayName: user.displayName,
@@ -50,10 +56,12 @@ export default function TextRoom({route, navigation}) {
   const messageRef = useRef();
   const scrollviewRef = useRef();
 
+  //UseEffect is called when component mounts, and fetches Chat room data from Firestore
   useEffect(() => {
     Fetchdata();
   }, [])
 
+  //Function is called if onSnapshot receives a result
   function onResult(QuerySnapshot) {
     QuerySnapshot.docChanges().forEach(element => {
       var data = element.doc.data();
@@ -62,19 +70,25 @@ export default function TextRoom({route, navigation}) {
     console.log('Got Mesages collection result.');
   }
   
+  //Function is called if onSnapshot receives an error
   function onError(error) {
     console.error(error);
   }
 
+  //Function to get all the messages in firestore for the current chatroom
   const Fetchdata = () => {
     const ref = firestore().collection('chatRooms').doc(room.id).collection('messages');
+    
+    //The query is ordered by timestamp in ascending order to display newest messages first
     ref.orderBy('timestamp', 'asc').onSnapshot(onResult, onError)    
   }
 
+  //Function to convert a timestamp from firebase to a readable DateTime format
   const convertTimestamp = (timestamp) => {
     return new Intl.DateTimeFormat('da-DK', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit'}).format(timestamp);
   }
 
+  //Function is called when user sends a message
   const handleSubmit = () => {
     sendMessage(room.id, user.user, message)
     setMessage('')
@@ -101,7 +115,6 @@ export default function TextRoom({route, navigation}) {
         }
         
 
-
       </ScrollView>
         <View style={styles.inputContainer} nested>
           <TextInput style={styles.form} placeholder='Enter Message' value={message} onChangeText={(message) => setMessage(message)} ref={messageRef}/>
@@ -113,6 +126,7 @@ export default function TextRoom({route, navigation}) {
   );
 }
 
+//Message component to construct how a message should be displayed in the UI
 const Message = ({text, name, timestamp}) => {
   return(
     <View>

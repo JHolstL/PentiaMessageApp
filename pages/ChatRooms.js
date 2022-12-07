@@ -8,10 +8,13 @@ export default function ChatRooms({route, navigation}) {
   const {user} = route.params;
   const [chatRooms, setChatRooms] = useState([])
 
+  //UseEffect is called when component mounts, and fetches Chat room data from Firestore
   useEffect(() => {
     FetchChatRooms();
   }, [])
 
+  //Function is run of onSnapshot receives a result and sets the data from
+  //the query to the chatRooms array
   function onResult(QuerySnapshot) {
     QuerySnapshot.docChanges().forEach(element => {
       var data = element.doc.data();
@@ -20,12 +23,18 @@ export default function ChatRooms({route, navigation}) {
     console.log('Got Mesages collection result.');
   }
   
+  //Function is run if onSnapshot receives an error.
   function onError(error) {
     console.error(error);
   }
 
+  //Function to get Chat room data from firestore
   const FetchChatRooms = () => {
+    //Find the collection
     const ref = firestore().collection('chatRooms');
+
+    //onSnapshot creates a listener on this collection, and returns a snapshot
+    //when new data is added to the collection
     ref.onSnapshot(onResult, onError)
   }
 
@@ -43,9 +52,7 @@ export default function ChatRooms({route, navigation}) {
         onPress={()=>{navigation.navigate('TextRoom', {room: room, user: user})}}
         >
           <Text style={styles.roomText} key={index}>{room.title}</Text>
-          <View style={styles.chevron}>
-            <Image source={require('../images/chevron_icon.png')} resizeMode='contain'/>
-          </View>
+          <Image source={require('../images/chevron_icon.png')} resizeMode='contain'/>
         
         </TouchableOpacity>          
       ))}

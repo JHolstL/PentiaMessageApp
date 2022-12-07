@@ -8,6 +8,7 @@ import TextRoom from './TextRoom';
 
 const Stack = createNativeStackNavigator();
 
+//Function which contains all Routes in the application using React Navigation
 export default function Navigation({navigation}) {
   return (
     <NavigationContainer>
