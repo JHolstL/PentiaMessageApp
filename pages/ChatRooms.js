@@ -9,6 +9,8 @@ export default function ChatRooms({route, navigation}) {
   const {user} = route.params;
   const [chatRooms, setChatRooms] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const unsubscribe = useRef(null)
+  
 
   //UseEffect is called when component mounts, and fetches Chat room data from Firestore
   useEffect(() => {
@@ -20,9 +22,10 @@ export default function ChatRooms({route, navigation}) {
   function onResult(QuerySnapshot) {
     QuerySnapshot.docChanges().forEach(element => {
       var data = element.doc.data();
+      
       setChatRooms(arr => [...arr, data]);
     });
-    console.log('Got Mesages collection result.');
+    console.log('Got Chatrooms collection result.');
   }
   
   //Function is run if onSnapshot receives an error.
@@ -32,23 +35,35 @@ export default function ChatRooms({route, navigation}) {
 
   //Function to get Chat room data from firestore
   const FetchChatRooms = () => {
+    setChatRooms([])
     //Find the collection
     const ref = firestore().collection('chatRooms');
 
     //onSnapshot creates a listener on this collection, and returns a snapshot
     //when new data is added to the collection
-    ref.onSnapshot(onResult, onError)
+    unsubscribe.value = ref.orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+      snapshot.docChanges().forEach((element) => {
+        var data = element.doc.data();
+        
+        setChatRooms(arr => [...arr, data]);
+      });
+      console.log('Got Chatrooms collection result.');
+    })
   }
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    // window.location.reload();
-    // FetchChatRooms();
-    navigation.push('ChatRooms', {user: user})
+    // navigation.push('ChatRooms', {user: user})
+    FetchChatRooms();
     setTimeout(function() {
       setRefreshing(false)
-    }, 2000)
+    }, 1000)
   }, []);
+
+  function Navigate(room) {
+    unsubscribe.value();
+    navigation.navigate('TextRoom', {room: room, user: user});
+  }
 
   return (
     <ScrollView
@@ -69,7 +84,7 @@ export default function ChatRooms({route, navigation}) {
       {chatRooms.map((room, index) => (   
         <TouchableOpacity
         style={styles.button}
-        onPress={()=>{navigation.navigate('TextRoom', {room: room, user: user})}}
+        onPress={()=>{Navigate(room);}}
         >
           <Text style={styles.roomText} key={index}>{room.title}</Text>
           <Image source={require('../images/chevron_icon.png')} resizeMode='contain'/>

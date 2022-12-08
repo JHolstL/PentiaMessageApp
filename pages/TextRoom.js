@@ -18,10 +18,15 @@ async function sendMessage(roomId, user, text){
       text: text,
       timestamp: timestamp,
     });
+    chatroomUpdate(timestamp, roomId)
   } catch (error) {
     console.log(error);
     console.log('Her')
   }
+}
+
+function chatroomUpdate(timestamp, roomId){
+  const ref = firestore().collection('chatRooms').doc(roomId).update({timestamp: timestamp})
 }
 
 export default function TextRoom({route, navigation}) {
