@@ -2,7 +2,8 @@ import React, {useRef, useEffect, useState, useCallback} from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Image, RefreshControl, ScrollView} from 'react-native'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import firestore from '@react-native-firebase/firestore';
-import { withSafeAreaInsets } from 'react-native-safe-area-context';
+import { useIsFocused } from "@react-navigation/native";
+
 
 export default function ChatRooms({route, navigation}) {
   
@@ -10,12 +11,16 @@ export default function ChatRooms({route, navigation}) {
   const [chatRooms, setChatRooms] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const unsubscribe = useRef(null)
+  const isFocused = useIsFocused();
+
   
 
   //UseEffect is called when component mounts, and fetches Chat room data from Firestore
   useEffect(() => {
-    FetchChatRooms();
-  }, []);
+    if (isFocused) {
+      FetchChatRooms();
+    }
+  }, [isFocused]);
 
   //Function is run of onSnapshot receives a result and sets the data from
   //the query to the chatRooms array

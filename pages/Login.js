@@ -5,11 +5,13 @@ import auth from '@react-native-firebase/auth'
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { useIsFocused } from "@react-navigation/native";
 
 export default function Login({navigation}) {
 
     const [loggedIn, setloggedIn] = useState(false);
     const [userInfo, setuserInfo] = useState('');
+    const isFocused = useIsFocused();
 
   //Configure web client id before signing in with Google
   GoogleSignin.configure({
@@ -47,10 +49,14 @@ export default function Login({navigation}) {
   //UseEffect is run when the setState for userinfo is done
   useEffect(() => {
     //Check if user is logged in, and redirect to next screen using React navigation
-    if (loggedIn) {
-      navigation.navigate('ChatRooms', {user: userInfo}) // This is be executed when the state changes
+    if (isFocused) {
+      console.log('called')
+      if (loggedIn) {
+        navigation.navigate('ChatRooms', {user: userInfo}) // This is to be executed when the state changes
+      }
+      
     }
-  }, [userInfo]);
+  }, [userInfo, isFocused]);
 
 
 
