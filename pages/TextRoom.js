@@ -1,6 +1,13 @@
-import { View, Text, StyleSheet, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, ScrollView, TouchableOpacity, Image, AppState } from 'react-native';
 import React, {useRef, useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
+import ImageLoader from './ImageLoader';
+import ImagePicker from 'react-native-image-picker';
+import notifee, {EventType} from '@notifee/react-native';
+import messaging from '@react-native-firebase/messaging';
+
+
+
 
 //async function to send data to firestore
 async function sendMessage(roomId, user, text){
@@ -18,6 +25,8 @@ async function sendMessage(roomId, user, text){
       text: text,
       timestamp: timestamp,
     });
+
+    //Update timestamp of current chatroom to display when last message was received
     chatroomUpdate(timestamp, roomId)
   } catch (error) {
     console.log(error);
@@ -39,8 +48,16 @@ export default function TextRoom({route, navigation}) {
 
   //UseEffect is called when component mounts, and fetches Chat room data from Firestore
   useEffect(() => {
+    AppState.addEventListener('change', HandleAppStateChange)
     Fetchdata();
   }, [])
+
+  //Handler for appstate
+  const HandleAppStateChange = (nextAppState) => {
+  if (AppState.currentState.match(/inactive|background/)) {
+    console.log('App has come to the background!')
+    }
+  }
 
   //Function is called if onSnapshot receives a result
   function onResult(QuerySnapshot) {
@@ -48,6 +65,12 @@ export default function TextRoom({route, navigation}) {
       var data = element.doc.data();
       setMessages(arr => [...arr, data]);
     });
+    console.log(AppState.currentState)
+
+    //Check if app is in background and send notification
+    if (AppState.currentState.match(/background/)) {
+      onDisplayNotification();
+    }
     console.log('Got Mesages collection result.');
   }
   
@@ -75,6 +98,37 @@ export default function TextRoom({route, navigation}) {
     setMessage('')
   }
 
+  //Create and send a notification with notifee
+  const onDisplayNotification = async() => {
+    // Request permissions (required for iOS)
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+    }
+    // Create a channel (required for Android)
+    const channelId = await notifee.createChannel({
+      id: room.id,
+      name: room.title,
+    });
+
+    // Display a notification
+    await notifee.displayNotification({
+      title: 'You go a message in the ' + room.title + 'Chatroom!',
+      body: '',
+      android: {
+        channelId,
+        // pressAction is needed if you want the notification to open the app when pressed
+        pressAction: {
+          id: 'default',
+        },
+      },
+    });
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>Welcome to the {room.title} chat room!</Text>
@@ -96,13 +150,17 @@ export default function TextRoom({route, navigation}) {
         }
         
       </ScrollView>
-        <View style={styles.inputContainer} nested>
-          <TextInput style={styles.form} placeholder='Enter Message' value={message} onChangeText={(message) => setMessage(message)} ref={messageRef}/>
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style={{fontWeight: 'bold',}}>Send</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.inputContainer} nested>
+        <TextInput style={styles.form} placeholder='Enter Message' value={message} onChangeText={(message) => setMessage(message)} ref={messageRef}/>
+         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+           <Text style={{fontWeight: 'bold',}}>Send</Text>
+         </TouchableOpacity>
+      </View>
+
+      <Button title="Display Notification" onPress={() => onDisplayNotification()} />
+
     </ScrollView>
+
   );
 }
 
@@ -116,7 +174,6 @@ const Message = ({text, name, timestamp}) => {
       </View>
       <Text style={styles.timestampText}>{timestamp}</Text>
     </View>
-
   );
 }
 
@@ -168,7 +225,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     backgroundColor: '#616161',
     marginLeft: 5,
-    // height: 35,
     justifyContent: 'center',
     textAlign: 'left',
     borderRadius: 10,

@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, TouchableOpacity, Image, RefreshControl, Scroll
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import firestore from '@react-native-firebase/firestore';
 import { useIsFocused } from "@react-navigation/native";
+import { Button } from 'react-native';
 
 
 export default function ChatRooms({route, navigation}) {
@@ -96,7 +97,8 @@ export default function ChatRooms({route, navigation}) {
         
         </TouchableOpacity>          
       ))}
-      </View>      
+      </View>
+
     </ScrollView>
     
   )

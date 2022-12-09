@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from "./Login";
 import ChatRooms from './ChatRooms';
 import TextRoom from './TextRoom';
+import ImageLoader from './ImageLoader';
 
 const Stack = createNativeStackNavigator();
 
