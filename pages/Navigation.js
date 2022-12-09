@@ -1,11 +1,9 @@
 import React from 'react'
-import { Button, View, Text, TouchableOpacity } from 'react-native';
-import { NavigationContainer, StackActionHelpers } from '@react-navigation/native';
+import { NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from "./Login";
 import ChatRooms from './ChatRooms';
 import TextRoom from './TextRoom';
-import ImageLoader from './ImageLoader';
 
 const Stack = createNativeStackNavigator();
 

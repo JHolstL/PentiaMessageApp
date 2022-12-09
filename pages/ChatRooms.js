@@ -3,7 +3,6 @@ import { Text, View, StyleSheet, TouchableOpacity, Image, RefreshControl, Scroll
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import firestore from '@react-native-firebase/firestore';
 import { useIsFocused } from "@react-navigation/native";
-import { Button } from 'react-native';
 
 export default function ChatRooms({route, navigation}) {
   
@@ -19,17 +18,6 @@ export default function ChatRooms({route, navigation}) {
       FetchChatRooms();
     }
   }, [isFocused]);
-
-  //Function is run of onSnapshot receives a result and sets the data from
-  //the query to the chatRooms array
-  function onResult(QuerySnapshot) {
-    QuerySnapshot.docChanges().forEach(element => {
-      var data = element.doc.data();
-      
-      setChatRooms(arr => [...arr, data]);
-    });
-    console.log('Got Chatrooms collection result.');
-  }
   
   //Function to get Chat room data from firestore
   const FetchChatRooms = () => {
@@ -42,7 +30,8 @@ export default function ChatRooms({route, navigation}) {
     unsubscribe.value = ref.orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
       snapshot.docChanges().forEach((element) => {
         var data = element.doc.data();
-        
+
+        //New data is added to array
         setChatRooms(arr => [...arr, data]);
       });
       console.log('Got Chatrooms collection result.');

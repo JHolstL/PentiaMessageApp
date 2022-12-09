@@ -1,8 +1,6 @@
 import { View, Text, StyleSheet, TextInput, Button, ScrollView, TouchableOpacity, Image, AppState } from 'react-native';
 import React, {useRef, useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
-import ImageLoader from './ImageLoader';
-import ImagePicker from 'react-native-image-picker';
 import notifee, {EventType} from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 
