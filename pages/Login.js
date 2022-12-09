@@ -127,10 +127,10 @@ export default function Login({navigation}) {
           <Text style={styles.fbText}>Sign in with Facebook</Text>
         </TouchableOpacity>
 
-        <Button 
+        {/* <Button 
         title='Sign out with Google'
         onPress={signOut}
-        />
+        /> */}
 
         {!loggedIn && <Text>You are currently logged out</Text>}
 
