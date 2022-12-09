@@ -5,16 +5,13 @@ import firestore from '@react-native-firebase/firestore';
 import { useIsFocused } from "@react-navigation/native";
 import { Button } from 'react-native';
 
-
 export default function ChatRooms({route, navigation}) {
   
   const {user} = route.params;
   const [chatRooms, setChatRooms] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const unsubscribe = useRef(null)
-  const isFocused = useIsFocused();
-
-  
+  const isFocused = useIsFocused();  
 
   //UseEffect is called when component mounts, and fetches Chat room data from Firestore
   useEffect(() => {
@@ -34,11 +31,6 @@ export default function ChatRooms({route, navigation}) {
     console.log('Got Chatrooms collection result.');
   }
   
-  //Function is run if onSnapshot receives an error.
-  function onError(error) {
-    console.error(error);
-  }
-
   //Function to get Chat room data from firestore
   const FetchChatRooms = () => {
     setChatRooms([])

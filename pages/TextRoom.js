@@ -30,7 +30,6 @@ async function sendMessage(roomId, user, text){
     chatroomUpdate(timestamp, roomId)
   } catch (error) {
     console.log(error);
-    console.log('Her')
   }
 }
 
@@ -132,6 +131,7 @@ export default function TextRoom({route, navigation}) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>Welcome to the {room.title} chat room!</Text>
+
       <ScrollView 
       contentContainerStyle={styles.textWindowScroll} 
       style={styles.textWindow} ref={scrollviewRef} 
@@ -156,8 +156,6 @@ export default function TextRoom({route, navigation}) {
            <Text style={{fontWeight: 'bold',}}>Send</Text>
          </TouchableOpacity>
       </View>
-
-      <Button title="Display Notification" onPress={() => onDisplayNotification()} />
 
     </ScrollView>
 

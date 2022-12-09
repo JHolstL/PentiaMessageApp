@@ -15,7 +15,7 @@ export default function Navigation({navigation}) {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name='Login' component={Login}/>
-        <Stack.Screen name='ChatRooms' component={ChatRooms}/>
+        <Stack.Screen name='ChatRooms' component={ChatRooms} options={{gestureEnabled: false}}/>
         <Stack.Screen name='TextRoom' component={TextRoom}/>
       </Stack.Navigator>
     </NavigationContainer> 
